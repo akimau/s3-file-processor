@@ -55,13 +55,18 @@ exports.handler = async (event, context) => {
             ...Metadata
         };
 
+        const thumbKey = `${key}.thumb.png`;
+        const thumbContentType = "image/png";
+        const thumbMetadata = { width: "100", height: "100" };
+
+        const previewKey = `${key}.preview.png`;
+        const previewContentType = "image/png";
+        const previewMetadata = { width: "1000", height: "1000" };
+
         if (ContentType && ContentType.startsWith("image")
             && !key.endsWith("thumb.png") && !key.endsWith("preview.png")) {
             const imgBuffer = await getBuffer(Body);
             const thumbImgBuffer = await sharp(imgBuffer).resize(100, 100).png().toBuffer();
-            const thumbKey = `${key}.thumb.png`;
-            const thumbContentType = "image/png";
-            const thumbMetadata = { width: "100", height: "100" };
 
             await s3.putObject({
                 Bucket: bucket,
@@ -114,9 +119,6 @@ exports.handler = async (event, context) => {
             // create thumb image
             const thumbImgBuffer = await sharp(imgBuffer).resize(
                 100, 100, { fit: "contain" }).png().toBuffer();
-            const thumbKey = `${key}.thumb.png`;
-            const thumbContentType = "image/png";
-            const thumbMetadata = { width: "100", height: "100" };
 
             await s3.putObject({
                 Bucket: bucket,
@@ -129,9 +131,6 @@ exports.handler = async (event, context) => {
             // create preview image
             const previewImgBuffer = await sharp(imgBuffer).resize(
                 1000, 1000, { fit: "contain" }).png().toBuffer();
-            const previewKey = `${key}.preview.png`;
-            const previewContentType = "image/png";
-            const previewMetadata = { width: "1000", height: "1000" };
 
             await s3.putObject({
                 Bucket: bucket,
