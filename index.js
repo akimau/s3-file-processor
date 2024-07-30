@@ -17,7 +17,9 @@ const STANDARD_FONT_DATA_URL =
 const canvasFactory = new NodeCanvasFactory();
 
 async function postData(data) {
-    await axios.post('https://webhook.site/5dd0c2d7-b024-4dd2-9697-59b44ef85bc4', data)
+    // POST result to BFF
+    const bffHost = "https://rnwan-185-203-122-220.a.free.pinggy.link";
+    await axios.post(`${bffHost}/api/documents/complete`, data)
         .then(console.log)
         .catch(console.error);
 }
@@ -46,8 +48,6 @@ exports.handler = async (event, context) => {
 
         const { Body, ContentType, ContentLength, Metadata } =
             await s3.getObject({ Bucket: bucket, Key: key });
-
-        await postData({ ContentType, ContentLength, Metadata })
 
         const metadata = {
             contentType: ContentType,
@@ -156,11 +156,9 @@ exports.handler = async (event, context) => {
                     ...previewMetadata,
                 }
             });
-        } else {
-            await postData({ key, metadata });
         }
     } catch (err) {
-        await postData({ err });
+        console.log(err);
     }
 
     const response = {
