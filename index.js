@@ -18,6 +18,9 @@ const STANDARD_FONT_DATA_URL =
 
 const canvasFactory = new NodeCanvasFactory();
 
+const s3ThumbImgKeySuffix = ".thumb.png";
+const s3PreviewImgKeySuffix = ".preview.png";
+
 const debug = true;
 
 // post data
@@ -89,7 +92,7 @@ async function getPdfImage(pdf) {
 
 // generate thumb from uploaded image file and save to s3 bucket
 async function generateImageThumb(bucket, key, metadata, img) {
-    const thumbKey = `${key}.thumb.png`;
+    const thumbKey = `${key}${s3ThumbImgKeySuffix}`;
     const thumbContentType = "image/png";
     const thumbMetadata = { width: "100", height: "100" };
 
@@ -112,11 +115,11 @@ async function generateImageThumb(bucket, key, metadata, img) {
 
 // generate thumb and preview from uploaded pdf file and save to s3 bucket
 async function generatePdfThumbAndPreview(bucket, key, metadata, pdf) {
-    const thumbKey = `${key}.thumb.png`;
+    const thumbKey = `${key}${s3ThumbImgKeySuffix}`;
     const thumbContentType = "image/png";
     const thumbMetadata = { width: "100", height: "100" };
 
-    const previewKey = `${key}.preview.png`;
+    const previewKey = `${key}${s3PreviewImgKeySuffix}`;
     const previewContentType = "image/png";
     const previewMetadata = { width: "1000", height: "1000" };
 
@@ -178,7 +181,7 @@ exports.handler = async (event, context) => {
         };
 
         if (ContentType && ContentType.startsWith("image")
-            && !key.endsWith("thumb.png") && !key.endsWith("preview.png")) {
+            && !key.endsWith(s3ThumbImgKeySuffix) && !key.endsWith(s3PreviewImgKeySuffix)) {
             const img = await streamToBuffer(Body);
             await generateImageThumb(bucket, key, metadata, img);
         } else if (ContentType === "application/pdf") {
