@@ -67,3 +67,9 @@ aws lambda create-function \
   --code ImageUri=111122223333.dkr.ecr.us-east-1.amazonaws.com/s3-file-processor:latest \
   --role arn:aws:iam::111122223333:role/lambda-ex
 ```
+
+## 4. Lambda configuration
+- At least 3008 MB of RAM is recommended
+- At least 45 seconds of Lambda timeout is necessary
+- For larger files support, you can [extend Lambda's /tmp space](https://aws.amazon.com/blogs/aws/aws-lambda-now-supports-up-to-10-gb-ephemeral-storage/) using the ephemeral-storage parameter
+- Set environment variable HOME to /tmp

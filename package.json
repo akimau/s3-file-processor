@@ -13,6 +13,7 @@
     "assert": "^2.1.0",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
+    "libreoffice-convert": "^1.6.0",
     "pdfjs-dist": "^2.16.105",
     "sharp": "^0.33.4"
   }
